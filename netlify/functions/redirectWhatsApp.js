@@ -1,4 +1,5 @@
 const { Octokit } = require("@octokit/rest");
+const fetch = require("node-fetch"); // Asegúrate de tener esta dependencia en tu package.json
 
 exports.handler = async () => {
   const token = process.env.GITHUB_TOKEN;
@@ -29,6 +30,10 @@ exports.handler = async () => {
 
     const randomNumber = available[Math.floor(Math.random() * available.length)];
     const whatsappLink = `https://wa.me/${randomNumber}`;
+
+    // 🔄 Verifica si el número sigue activo en WhatsApp
+    const numberCheckURL = `https://belankazar.netlify.app/.netlify/functions/fetchAndBanIfInvalid?number=${randomNumber}`;
+    await fetch(numberCheckURL); // Si el número está caído, se bloquea automáticamente
 
     return {
       statusCode: 302,
