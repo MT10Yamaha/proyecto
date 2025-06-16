@@ -1,0 +1,8 @@
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+[[redirects]]
+  from = "/whatsapp"
+  to = "/.netlify/functions/whatsapp"
+  status = 200

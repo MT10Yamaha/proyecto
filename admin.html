@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin WhatsApp</title>
+</head>
+<body>
+  <h2>Administrar Números</h2>
+  <ul id="numberList"></ul>
+
+  <input id="newNumber" placeholder="573001234567" />
+  <button onclick="add()">Agregar número</button>
+
+  <script>
+    const numbersURL = '/numbers.json';
+    const list = document.getElementById('numberList');
+
+    async function loadNumbers() {
+      const res = await fetch(numbersURL);
+      const data = await res.json();
+      list.innerHTML = '';
+      data.numbers.forEach(n => {
+        const li = document.createElement('li');
+        li.textContent = n;
+        const btn = document.createElement('button');
+        btn.textContent = '❌';
+        btn.onclick = () => remove(n);
+        li.appendChild(btn);
+        list.appendChild(li);
+      });
+    }
+
+    async function add() {
+      const num = document.getElementById('newNumber').value.trim();
+      await fetch('/.netlify/functions/addNumber', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ number: num })
+      });
+      loadNumbers();
+    }
+
+    async function remove(num) {
+      await fetch(`/.netlify/functions/removeNumber?number=${num}`);
+      loadNumbers();
+    }
+
+    loadNumbers();
+  </script>
+</body>
+</html>
