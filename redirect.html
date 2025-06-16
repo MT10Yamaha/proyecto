@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirigiendo a WhatsApp...</title>
+</head>
+<body>
+  <h2 style="text-align:center;">Verificando número, por favor espera...</h2>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const number = params.get("number");
+
+    // Números activos disponibles
+    const whatsappNumbers = [
+      "573169309687",
+      "573174355536",
+      "573171133586"
+    ];
+
+    if (!number) {
+      document.body.innerText = "❌ Número no proporcionado en el enlace.";
+    } else {
+      fetch(`/.netlify/functions/checkNumber?number=${number}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.blocked) {
+            // Número bloqueado: mostrar mensaje o redirigir a página de advertencia
+            window.location.href = "https://belankazar.netlify.app/bloqueado.html";
+          } else {
+            // Número válido: redirigir a uno de los WhatsApp disponibles (aleatorio)
+            const destino = whatsappNumbers[Math.floor(Math.random() * whatsappNumbers.length)];
+            window.location.href = `https://wa.me/${destino}`;
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          document.body.innerText = "❌ Error al verificar el número.";
+        });
+    }
+  </script>
+</body>
+</html>
