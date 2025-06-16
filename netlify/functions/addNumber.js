@@ -6,8 +6,8 @@ exports.handler = async (event) => {
   const token = process.env.GITHUB_TOKEN;
 
   const octokit = new Octokit({ auth: token });
-  const owner = 'TU_USUARIO'; // Cambia esto
-  const repo = 'TU_REPOSITORIO'; // Cambia esto
+  const owner = 'MT10Yamaha'; // Cambia esto
+  const repo = 'proyecto'; // Cambia esto
   const path = 'numbers.json';
 
   try {
